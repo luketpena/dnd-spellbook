@@ -1,0 +1,51 @@
+.back-shadow {
+  filter: drop-shadow(0px 0px 4px rgba(0, 0, 0, 1));
+}
+
+.bg-hexagon-flat {
+  aspect-ratio: 1 / cos(30deg);
+  clip-path: polygon(50% -50%, 100% 50%, 50% 150%, 0 50%);
+}
+
+.bg-hexagon-point {
+  aspect-ratio: cos(30deg);
+  clip-path: polygon(-50% 50%, 50% 100%, 150% 50%, 50% 0);
+}
+
+.bg-hexagon-flat-outline {
+  --b: 2px; /* adjust to control the border  */
+  aspect-ratio: 1 / cos(30deg);
+  clip-path: polygon(
+    0 50%,
+    50% -50%,
+    100% 50%,
+    50% 150%,
+    0 50%,
+    var(--b) 50%,
+    calc(25% + var(--b) * cos(60deg)) calc(100% - var(--b) * sin(60deg)),
+    calc(75% - var(--b) * cos(60deg)) calc(100% - var(--b) * sin(60deg)),
+    calc(100% - var(--b)) 50%,
+    calc(75% - var(--b) * cos(60deg)) calc(var(--b) * sin(60deg)),
+    calc(25% + var(--b) * cos(60deg)) calc(var(--b) * sin(60deg)),
+    var(--b) 50%
+  );
+}
+
+.bg-hexagon-point-outline {
+  --b: 2px; /* adjust to control the border  */
+  aspect-ratio: cos(30deg);
+  clip-path: polygon(
+    50% 0,
+    -50% 50%,
+    50% 100%,
+    150% 50%,
+    50% 0,
+    50% var(--b),
+    calc(100% - var(--b) * sin(60deg)) calc(25% + var(--b) * cos(60deg)),
+    calc(100% - var(--b) * sin(60deg)) calc(75% - var(--b) * cos(60deg)),
+    50% calc(100% - var(--b)),
+    calc(var(--b) * sin(60deg)) calc(75% - var(--b) * cos(60deg)),
+    calc(var(--b) * sin(60deg)) calc(25% + var(--b) * cos(60deg)),
+    50% var(--b)
+  );
+}
