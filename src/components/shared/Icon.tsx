@@ -14,10 +14,9 @@ export type IconName = keyof typeof Icons;
 type IconProps = {
   name: IconName;
   size?: number;
-  color?: string;
 };
 
-const Icon = ({ name, size = 24, color = "black" }: IconProps) => {
+const Icon = ({ name, size = 24 }: IconProps) => {
   const IconComponent = (Icons as { [key: string]: IconType })[name];
 
   if (!IconComponent) {

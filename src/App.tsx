@@ -1,4 +1,4 @@
-import { FormProvider, useForm, useWatch } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import "./App.css";
 import "./assets/styles/reusable-styles.css";
 import { InputText } from "./components/form-components/InputText";
@@ -85,11 +85,6 @@ function App() {
 
   const spells: CardForm[] = [SpellMinorIllusion, SpellFireBolt];
 
-  const titleValue = useWatch({
-    control: form.control,
-    name: "title",
-  });
-
   const [openIndex, setOpenIndex] = useState<number | null>(1);
 
   function toggleOpenIndex(v: number) {
@@ -108,27 +103,16 @@ function App() {
   }, []);
 
   function handleDeviceOrientation(e: DeviceOrientationEvent) {
-    window.addEventListener("deviceorientation", (e) => {
-      if (e.alpha !== null) {
-        setHasGryro(`Alpha: ${e.alpha}, Beta: ${e.beta}, Gamma: ${e.gamma}`);
-      } else {
-        setHasGryro(
-          "DeviceOrientationEvent exists but is not returning usable data." +
-            JSON.stringify(e)
-        );
-      }
+    setGamma(-3);
+    if (!e.alpha && !e.beta && !e.gamma) {
+      return;
+    }
 
-      setGamma(-3);
-      if (!e.alpha && !e.beta && !e.gamma) {
-        return;
-      }
+    console.log("rotate");
 
-      console.log("rotate");
-
-      setAlpha(e.alpha ?? -2);
-      setBeta(e.beta ?? -2);
-      setGamma(e.gamma ?? -2);
-    });
+    setAlpha(e.alpha ?? -2);
+    setBeta(e.beta ?? -2);
+    setGamma(e.gamma ?? -2);
   }
 
   async function checkGyroSupport() {

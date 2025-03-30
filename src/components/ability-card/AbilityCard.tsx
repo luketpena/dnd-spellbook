@@ -1,5 +1,4 @@
 import clsx from "clsx";
-import { useState } from "react";
 import { CardForm } from "../../App";
 import Icon from "../shared/Icon";
 import "./AbilityCard.css";
