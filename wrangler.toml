@@ -1,0 +1,5 @@
+name = "dnd-spellbook"
+compatibility_date = "2024-03-30"
+
+[site]
+bucket = "./dist"  # Change to "./build" if using Create React App

@@ -1,13 +1,23 @@
+import { createContext, useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import "./App.css";
 import "./assets/styles/reusable-styles.css";
-import { InputText } from "./components/form-components/InputText";
 import { AbilityCard } from "./components/ability-card/AbilityCard";
-import { useEffect, useState } from "react";
 import {
   SpellFireBolt,
   SpellMinorIllusion,
 } from "./components/ability-card/spells";
+import { InputText } from "./components/form-components/InputText";
+
+interface CardCollectionContextType {
+  tilt: {
+    x: number;
+    y: number;
+  };
+}
+export const CardCollectionContext = createContext<CardCollectionContextType>({
+  tilt: { x: 0, y: 0 },
+});
 
 export type CastingComponents = "S" | "M" | "V" | "C";
 export type Dice = 4 | 6 | 8 | 10 | 12 | 20;
@@ -96,10 +106,25 @@ function App() {
   const [gamma, setGamma] = useState(0);
 
   const [hasGyro, setHasGryro] = useState<string | null>(null);
+  const [cardCollectionData, setCardCollectionData] =
+    useState<CardCollectionContextType>({ tilt: { x: 0, y: 0 } });
 
   useEffect(() => {
-    console.log("app init");
     checkGyroSupport();
+    // window.addEventListener("mousemove", (e) => {
+    //   // const x = Number((e.offsetX / window.innerWidth).toFixed(2));
+    //   // const y = Number((e.offsetY / window.innerHeight).toFixed(2));
+    //   // const tiltX = (x - 0.5) * 2;
+    //   // const tiltY = (y - 0.5) * 2;
+    //   // console.log(tiltX);
+
+    //   setCardCollectionData({
+    //     tilt: {
+    //       x: tiltX,
+    //       y: tiltY,
+    //     },
+    //   });
+    // });
   }, []);
 
   function handleDeviceOrientation(e: DeviceOrientationEvent) {
@@ -108,11 +133,16 @@ function App() {
       return;
     }
 
-    console.log("rotate");
-
     setAlpha(e.alpha ?? -2);
     setBeta(e.beta ?? -2);
     setGamma(e.gamma ?? -2);
+
+    setCardCollectionData({
+      tilt: {
+        x: (e.beta ?? 0) / 30,
+        y: (e.gamma ?? 0) / 30,
+      },
+    });
   }
 
   async function checkGyroSupport() {
@@ -156,17 +186,19 @@ function App() {
       <p>Alpha: {alpha}</p>
       <p>Beta: {beta}</p>
       <p>Gamma: {gamma}</p>
+      <p>{JSON.stringify(cardCollectionData)}</p>
 
-      <div className="m-8">
-        {spells.map((spell, index) => (
-          <AbilityCard
-            key={`ability-card-${index}`}
-            {...spell}
-            open={openIndex === index}
-            onClickOpen={() => toggleOpenIndex(index)}
-          />
-        ))}
-        {/* <AbilityCard
+      <CardCollectionContext.Provider value={cardCollectionData}>
+        <div className="m-8">
+          {spells.map((spell, index) => (
+            <AbilityCard
+              key={`ability-card-${index}`}
+              {...spell}
+              open={openIndex === index}
+              onClickOpen={() => toggleOpenIndex(index)}
+            />
+          ))}
+          {/* <AbilityCard
           {...form.getValues()}
           open={openIndex === 0}
           onClickOpen={() => toggleOpenIndex(0)}
@@ -176,7 +208,8 @@ function App() {
           open={openIndex === 1}
           onClickOpen={() => toggleOpenIndex(1)}
         /> */}
-      </div>
+        </div>
+      </CardCollectionContext.Provider>
 
       <FormProvider {...form}>
         <InputText name="title" />

@@ -1,10 +1,11 @@
 import clsx from "clsx";
-import { CardForm } from "../../App";
+import { CardCollectionContext, CardForm } from "../../App";
 import Icon from "../shared/Icon";
 import "./AbilityCard.css";
 import { AbilityCardDetailsRow } from "./components/AbilityCardDetailsRow";
 import { AbilityCardDescription } from "./components/AbilityCardDescription";
 import { AbilityCardSpellLevel } from "./components/AbilityCardSpellLevel";
+import { useContext } from "react";
 
 export interface AbilityCardProps extends CardForm {
   open: boolean;
@@ -20,18 +21,22 @@ export const AbilityCard: React.FC<AbilityCardProps> = ({
   backgroundSrc,
 }) => {
   const { magicSchool, level } = details;
+  const cardContext = useContext(CardCollectionContext);
 
   return (
     <div
       className={clsx(
-        `group w-[400px] cursor-pointer relative transition-all overflow-hidden bg-green-700 rounded-lg p-2 bg-cover bg-center`,
+        `group w-[400px] cursor-pointer relative  overflow-hidden bg-green-700 rounded-lg p-2 bg-cover bg-center`,
         open ? "h-[560px]" : "h-[130px]"
       )}
-      style={{ backgroundImage: `url(${backgroundSrc})` }}
+      style={{
+        backgroundImage: `url(${backgroundSrc})`,
+        backgroundPositionX: `${Math.floor(cardContext.tilt.x * 32)}px`,
+        backgroundPositionY: `${Math.floor(cardContext.tilt.y * 32)}px`,
+      }}
       onClick={() => onClickOpen()}
       role="button"
     >
-      {/* <div className="absolute w-full h-full left-0 top-0 bg-black/50 group-hover:opacity-0 transition-opacity"></div> */}
       <div className="border border-white/75  border-x-white/50 border-b-white/25  transition-all h-full rounded-md p-2 grid grid-rows-[auto_auto_1fr] gap-2">
         {/* Header */}
         <div className="flex gap-2 items-center justify-between  text-white">
