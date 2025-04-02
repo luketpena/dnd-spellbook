@@ -73,14 +73,16 @@ export const AbilityCard: React.FC<AbilityCardProps> = ({
         {/* Details */}
         <AbilityCardDetailsRow {...details} />
 
-        {/* Description */}
         <div
           className={clsx(
-            "transition-opacity flex flex-col gap-2",
+            "transition-opacity gap-2 grid grid-rows-[auto_1fr_auto]",
             !open && "opacity-0"
           )}
         >
-          {details.damage && (
+          {/* Damage */}
+          {!details.damage ? (
+            <div></div>
+          ) : (
             <div className="bg-black/75 p-2 rounded text-xs text-white">
               <div>
                 {details.damage.count}d{details.damage.dice}{" "}
@@ -105,7 +107,13 @@ export const AbilityCard: React.FC<AbilityCardProps> = ({
               )}
             </div>
           )}
-          <AbilityCardDescription content={content} />
+
+          {/* Description */}
+          <div className="relative">
+            <div className="absolute w-full h-full left-0 top-0 no-scrollbar overflow-y-auto bg-black/75 rounded backdrop-blur-sm">
+              <AbilityCardDescription content={content} />
+            </div>
+          </div>
 
           {/* Card Actions */}
           <div className="bg-black/75 rounded p-2 text-white backdrop-blur-sm">

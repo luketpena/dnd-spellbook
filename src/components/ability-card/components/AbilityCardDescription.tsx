@@ -9,11 +9,7 @@ export const AbilityCardDescription: React.FC<AbilityCardDescription> = ({
   content,
 }) => {
   return (
-    <div
-      className={clsx(
-        "bg-black/75 rounded p-2 text-white backdrop-blur-sm overflow-y-auto no-scrollbar transition-opacity h-full"
-      )}
-    >
+    <div className=" p-2 text-white">
       <span className="back-shadow text-outline whitespace-pre-line text-xs flex flex-col gap-4">
         {content.map((data, index) => (
           <p key={`description-${index}`}>
