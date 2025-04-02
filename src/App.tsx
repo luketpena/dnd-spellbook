@@ -78,7 +78,6 @@ const lerp = (start: number, end: number, amount: number) => {
 
 function App() {
   const spells: SkillCard[] = [
-    SpellFindFamiliar,
     SpellMinorIllusion,
     SpellFireBolt,
     SpellMageHand,
@@ -91,9 +90,10 @@ function App() {
     SpellMagicMissile,
     SpellChillTouch,
     SpellThaumaturgy,
+    SpellFindFamiliar,
   ];
 
-  const [openIndex, setOpenIndex] = useState<number | null>(0);
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   function toggleOpenIndex(v: number) {
     setOpenIndex(openIndex === v ? null : v);

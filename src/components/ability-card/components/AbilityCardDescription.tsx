@@ -1,4 +1,3 @@
-import clsx from "clsx";
 import { CardContent } from "../../../App";
 
 interface AbilityCardDescription {

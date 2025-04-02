@@ -295,6 +295,7 @@ export const SpellCharmPerson = new SkillCard({
 
 export const SpellMagicMissile = new SkillCard({
   title: "Magic Missile",
+  backgroundSrc: "https://i.imgur.com/MnCY3sN.png",
   details: {
     castingTime: "Action",
     range: "120ft",
@@ -325,6 +326,7 @@ export const SpellMagicMissile = new SkillCard({
 
 export const SpellChillTouch = new SkillCard({
   title: "Chill Touch",
+  backgroundSrc: "https://i.imgur.com/AHlGPLh.png",
   details: {
     castingTime: "Action",
     range: "Touch",
@@ -405,6 +407,7 @@ export const SpellThaumaturgy = new SkillCard({
 
 export const SpellFindFamiliar = new SkillCard({
   title: "Find Familiar",
+  backgroundSrc: "https://i.imgur.com/PnPrzPx.png",
   details: {
     castingTime: "1hr",
     range: "10ft",
@@ -447,7 +450,7 @@ export const SpellFindFamiliar = new SkillCard({
       text: "As a Magic Action, familiar can be temporarily dismissed to a pocket dimension or forever. It drops anything it was carrying. If temporarily dismissed, it can be resummoned within 30ft range as a Magic Action. ",
     },
     {
-      header: "On Familiar Only",
+      header: "One Familiar Only",
       text: "Only one familiar is active at a time. Recasting will allow you to alter the Form it takes.",
     },
   ],
