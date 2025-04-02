@@ -402,3 +402,53 @@ export const SpellThaumaturgy = new SkillCard({
     },
   ],
 });
+
+export const SpellFindFamiliar = new SkillCard({
+  title: "Find Familiar",
+  details: {
+    castingTime: "1hr",
+    range: "10ft",
+    components: ["V", "S", "M"],
+    materialComponents: "Incense (10+ GP)",
+    magicSchool: "conjuration",
+    level: 1,
+    ritual: true,
+  },
+  content: [
+    {
+      text: "Gain the service of a familiar, taking an animal form you choose. Familiar appears within unoccupied space within range. They act independently, but obey your commands.",
+    },
+    {
+      header: "Form",
+      text: "Bat, Cat, Frog, Hawk, Lizard, Octopus, Owl, Rat, Raven, Spider, Weasel, or another Beast with a Challenge Rating of 0",
+    },
+    {
+      header: "Classification",
+      text: "Familiar is not a Beast, but is a Celestial, Fey, or Fiend.",
+    },
+    {
+      header: "Telepathic Connection",
+      text: "While within 100ft, you can communicate telepathically. As a Bonus Action, you can see through their eyes and hear what it hears until the start of your next turn, gaining the benefits of any special senses it has.",
+    },
+    {
+      header: "Spell Casting",
+      text: "When you cast spells with a range of touch, the familiar can deliver the touch. Familiar must be within 100ft and takes a Reaction to deliver the touch.",
+    },
+    {
+      header: "Combat",
+      text: "Familiar is an ally to you and your allies. It rolls initiative and acts on its turn. It cannot attack.",
+    },
+    {
+      header: "Disappearance",
+      text: "When the familiar drops to 0 HP, it disappears. It drops anything it was carrying.",
+    },
+    {
+      header: "Dismissal",
+      text: "As a Magic Action, familiar can be temporarily dismissed to a pocket dimension or forever. It drops anything it was carrying. If temporarily dismissed, it can be resummoned within 30ft range as a Magic Action. ",
+    },
+    {
+      header: "On Familiar Only",
+      text: "Only one familiar is active at a time. Recasting will allow you to alter the Form it takes.",
+    },
+  ],
+});

@@ -9,6 +9,7 @@ import {
   SpellChillTouch,
   SpellDetectMagic,
   SpellDisguiseSelf,
+  SpellFindFamiliar,
   SpellFireBolt,
   SpellMageArmor,
   SpellMageHand,
@@ -89,6 +90,7 @@ function App() {
     SpellMagicMissile,
     SpellChillTouch,
     SpellThaumaturgy,
+    SpellFindFamiliar,
   ];
 
   const [openIndex, setOpenIndex] = useState<number | null>(null);
