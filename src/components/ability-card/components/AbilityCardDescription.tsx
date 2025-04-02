@@ -11,8 +11,7 @@ export const AbilityCardDescription: React.FC<AbilityCardDescription> = ({
   return (
     <div
       className={clsx(
-        "bg-black/75 rounded p-2 text-white backdrop-blur-sm overflow-y-auto no-scrollbar transition-opacity h-full",
-        !open && "opacity-0"
+        "bg-black/75 rounded p-2 text-white backdrop-blur-sm overflow-y-auto no-scrollbar transition-opacity h-full"
       )}
     >
       <span className="back-shadow text-outline whitespace-pre-line text-xs flex flex-col gap-4">

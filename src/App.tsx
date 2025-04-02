@@ -1,13 +1,25 @@
-import { createContext, useEffect, useState } from "react";
-import { FormProvider, useForm } from "react-hook-form";
+import { createContext, useEffect, useRef, useState } from "react";
 import "./App.css";
 import "./assets/styles/reusable-styles.css";
+import { MagicSchool } from "./class-data/magic";
 import { AbilityCard } from "./components/ability-card/AbilityCard";
 import {
+  SkillCard,
+  SpellCharmPerson,
+  SpellChillTouch,
+  SpellDetectMagic,
+  SpellDisguiseSelf,
   SpellFireBolt,
+  SpellMageArmor,
+  SpellMageHand,
+  SpellMagicMissile,
   SpellMinorIllusion,
+  SpellShield,
+  SpellSilentImage,
+  SpellThaumaturgy,
 } from "./components/ability-card/spells";
-import { InputText } from "./components/form-components/InputText";
+
+// @ts-nocheck
 
 interface CardCollectionContextType {
   tilt: {
@@ -25,6 +37,7 @@ export interface Damage {
   type: string;
   count: number;
   dice: Dice;
+  modifier?: string;
 }
 
 export interface DamageWithLevel extends Omit<Partial<Damage>, "type"> {
@@ -36,18 +49,21 @@ export interface CardDetails {
   range: string;
   castingTime: string;
   level: number;
-  magicSchool: string;
+  magicSchool: MagicSchool;
   components: CastingComponents[];
   materialComponents?: string;
   damage?: Damage;
   damageScaling?: DamageWithLevel[];
+  prepared?: boolean;
+  ritual?: boolean;
+  concentration?: boolean;
 }
 
 export interface CardForm {
   title: string;
   content: CardContent[];
   details: CardDetails;
-  backgroundSrc: string;
+  backgroundSrc?: string;
 }
 
 export interface CardContent {
@@ -55,93 +71,71 @@ export interface CardContent {
   text?: string;
 }
 
+const lerp = (start: number, end: number, amount: number) => {
+  return start + (end - start) * amount;
+};
+
 function App() {
-  const form = useForm<CardForm>({
-    defaultValues: {
-      title: "Minor Illusion",
-      details: {
-        duration: "1 Minute",
-        range: "30ft",
-        castingTime: "Action",
-        magicSchool: "Illusion",
-        level: 0,
-        components: ["S", "M"],
-        materialComponents: "fleece",
-      },
+  const spells: SkillCard[] = [
+    SpellMinorIllusion,
+    SpellFireBolt,
+    SpellMageHand,
+    SpellMageArmor,
+    SpellSilentImage,
+    SpellShield,
+    SpellDetectMagic,
+    SpellDisguiseSelf,
+    SpellCharmPerson,
+    SpellMagicMissile,
+    SpellChillTouch,
+    SpellThaumaturgy,
+  ];
 
-      content: [
-        {
-          text: "Create a sound or image for the duration.",
-        },
-        {
-          header: "Single illusion",
-          text: "Only 1 minor illusion can be active. Recasting ends prior illusion.",
-        },
-        {
-          header: "Counter",
-          text: "Creature can take study action to examine. INT (Investigation) check vs spell save DC. If perceived, the illusion becomes faint to them.",
-        },
-        {
-          header: "Sound",
-          text: "Whisper to scream in volume, any sound. Single continuous or many discrete.",
-        },
-        {
-          header: "Image",
-          text: "5ft cube, no other sensory experience and no light emission. Objects pass through it.",
-        },
-      ],
-    },
-  });
-
-  const spells: CardForm[] = [SpellMinorIllusion, SpellFireBolt];
-
-  const [openIndex, setOpenIndex] = useState<number | null>(1);
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   function toggleOpenIndex(v: number) {
     setOpenIndex(openIndex === v ? null : v);
+    setTimeout(() => {
+      document
+        .getElementById(`spell-${v}`)
+        ?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 250);
   }
 
-  const [alpha, setAlpha] = useState(0);
-  const [beta, setBeta] = useState(0);
-  const [gamma, setGamma] = useState(0);
-
-  const [hasGyro, setHasGryro] = useState<string | null>(null);
+  const targetTilt = useRef({ x: 0, y: 0 });
+  const animFrame = useRef<number | null>(null);
   const [cardCollectionData, setCardCollectionData] =
     useState<CardCollectionContextType>({ tilt: { x: 0, y: 0 } });
 
   useEffect(() => {
     checkGyroSupport();
-    // window.addEventListener("mousemove", (e) => {
-    //   // const x = Number((e.offsetX / window.innerWidth).toFixed(2));
-    //   // const y = Number((e.offsetY / window.innerHeight).toFixed(2));
-    //   // const tiltX = (x - 0.5) * 2;
-    //   // const tiltY = (y - 0.5) * 2;
-    //   // console.log(tiltX);
-
-    //   setCardCollectionData({
-    //     tilt: {
-    //       x: tiltX,
-    //       y: tiltY,
-    //     },
-    //   });
-    // });
   }, []);
 
   function handleDeviceOrientation(e: DeviceOrientationEvent) {
-    setGamma(-3);
     if (!e.alpha && !e.beta && !e.gamma) {
       return;
     }
 
-    setAlpha(e.alpha ?? -2);
-    setBeta(e.beta ?? -2);
-    setGamma(e.gamma ?? -2);
+    targetTilt.current.x = ((e.beta ?? 0) / 30) * -1;
+    targetTilt.current.y = (e.gamma ?? 0) / 30;
 
-    setCardCollectionData({
-      tilt: {
-        x: (e.beta ?? 0) / 30,
-        y: (e.gamma ?? 0) / 30,
-      },
+    if (!animFrame.current) {
+      animateTilt();
+    }
+  }
+
+  function animateTilt() {
+    setCardCollectionData((prev) => {
+      const smoothX = lerp(prev.tilt.x, targetTilt.current.x, 0.1);
+      const smoothY = lerp(prev.tilt.y, targetTilt.current.y, 0.1);
+
+      animFrame.current = requestAnimationFrame(animateTilt);
+      return {
+        tilt: {
+          x: smoothX,
+          y: smoothY,
+        },
+      };
     });
   }
 
@@ -158,62 +152,50 @@ function App() {
           console.log(
             "DeviceOrientationEvent is supported and permission granted!"
           );
-          setHasGryro("permission granted");
+
           window.addEventListener("deviceorientation", handleDeviceOrientation);
         } else {
           console.log("DeviceOrientationEvent permission denied.");
-          setHasGryro("permission denied");
         }
       } catch (error) {
         console.error(
           "Error requesting DeviceOrientationEvent permission:",
           error
         );
-        setHasGryro("error requesting permission");
       }
     } else {
       console.log(
         "DeviceOrientationEvent is supported without explicit permission."
       );
-      setHasGryro("permission not required");
+
       window.addEventListener("deviceorientation", handleDeviceOrientation);
     }
   }
 
   return (
     <>
-      <p>Has gyro: {hasGyro}</p>
-      <p>Alpha: {alpha}</p>
-      <p>Beta: {beta}</p>
-      <p>Gamma: {gamma}</p>
-      <p>{JSON.stringify(cardCollectionData)}</p>
-
       <CardCollectionContext.Provider value={cardCollectionData}>
-        <div className="m-8">
-          {spells.map((spell, index) => (
-            <AbilityCard
-              key={`ability-card-${index}`}
-              {...spell}
-              open={openIndex === index}
-              onClickOpen={() => toggleOpenIndex(index)}
-            />
-          ))}
-          {/* <AbilityCard
-          {...form.getValues()}
-          open={openIndex === 0}
-          onClickOpen={() => toggleOpenIndex(0)}
-        />
-        <AbilityCard
-          {...form.getValues()}
-          open={openIndex === 1}
-          onClickOpen={() => toggleOpenIndex(1)}
-        /> */}
+        <div className="grid grid-cols-[auto_1fr] bg-black h-dvh">
+          {/* Spell List */}
+          <div className="h-dvh overflow-auto no-scrollbar">
+            <div className="flex flex-col h-max">
+              {spells.map((skill, index) => (
+                <span id={`spell-${index}`}>
+                  <AbilityCard
+                    key={`ability-card-${index}`}
+                    skill={skill}
+                    open={openIndex === index}
+                    onClickOpen={() => toggleOpenIndex(index)}
+                  />
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Spell Slots */}
+          {/* <SpellSlotRow slots={pcData.spellSlots} /> */}
         </div>
       </CardCollectionContext.Provider>
-
-      <FormProvider {...form}>
-        <InputText name="title" />
-      </FormProvider>
     </>
   );
 }
