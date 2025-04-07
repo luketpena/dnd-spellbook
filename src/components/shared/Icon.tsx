@@ -1,12 +1,14 @@
 import * as GiIcons from "react-icons/gi";
 import * as BsIcons from "react-icons/bs";
 import * as TbIcons from "react-icons/tb";
+import * as BiIcons from "react-icons/bi";
 import { IconType } from "react-icons";
 
 const Icons = {
   ...GiIcons,
   ...BsIcons,
   ...TbIcons,
+  ...BiIcons,
 };
 
 export type IconName = keyof typeof Icons;

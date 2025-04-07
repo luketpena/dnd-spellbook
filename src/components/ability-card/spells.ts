@@ -206,6 +206,7 @@ export const SpellSilentImage = new SkillCard({
 
 export const SpellDetectMagic = new SkillCard({
   title: "Detect Magic",
+  backgroundSrc: "https://i.imgur.com/OK45ARY.png",
   details: {
     castingTime: "Action",
     ritual: true,
@@ -233,6 +234,7 @@ export const SpellDetectMagic = new SkillCard({
 
 export const SpellDisguiseSelf = new SkillCard({
   title: "Disguise Self",
+  backgroundSrc: "https://i.imgur.com/N4Fn07y.png",
   details: {
     castingTime: "Action",
     range: "Self",
@@ -262,6 +264,7 @@ export const SpellDisguiseSelf = new SkillCard({
 
 export const SpellCharmPerson = new SkillCard({
   title: "Charm Person",
+  backgroundSrc: "https://i.imgur.com/Z2s7QIe.png",
   details: {
     castingTime: "Action",
     range: "30ft",
@@ -366,6 +369,7 @@ export const SpellChillTouch = new SkillCard({
 
 export const SpellThaumaturgy = new SkillCard({
   title: "Thaumaturgy",
+  backgroundSrc: "https://i.imgur.com/FLEKHNO.png",
   details: {
     castingTime: "Action",
     range: "30ft",

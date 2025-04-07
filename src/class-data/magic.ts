@@ -1,14 +1,14 @@
 import { IconName } from "../components/shared/Icon";
 
 export type MagicSchool =
-  | "abjuration"
-  | "conjuration"
-  | "divination"
-  | "enchantment"
-  | "evocation"
-  | "illusion"
-  | "necromancy"
-  | "transmutation";
+  | "abjuration" // Orange
+  | "conjuration" // Blue
+  | "divination" // Cyan
+  | "enchantment" // White
+  | "evocation" // Yellow
+  | "illusion" // Purple
+  | "necromancy" // Green
+  | "transmutation"; // Red;
 
 export function getMagicSchoolIcon(school: MagicSchool): IconName {
   switch (school) {

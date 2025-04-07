@@ -1,4 +1,4 @@
-import { createContext, useEffect, useRef, useState } from "react";
+import { createContext, useEffect, useMemo, useRef, useState } from "react";
 import "./App.css";
 import "./assets/styles/reusable-styles.css";
 import { MagicSchool } from "./class-data/magic";
@@ -19,6 +19,7 @@ import {
   SpellSilentImage,
   SpellThaumaturgy,
 } from "./components/ability-card/spells";
+import { SlideMenu, SlideMenuButton } from "./components/slide-menu/SlideMenu";
 
 // @ts-nocheck
 
@@ -72,12 +73,15 @@ export interface CardContent {
   text?: string;
 }
 
+export type SpellSortTarget = "level" | "magicSchool" | "title";
+export type SortDirection = "asc" | "desc";
+
 const lerp = (start: number, end: number, amount: number) => {
   return start + (end - start) * amount;
 };
 
 function App() {
-  const spells: SkillCard[] = [
+  const spellList: SkillCard[] = [
     SpellMinorIllusion,
     SpellFireBolt,
     SpellMageHand,
@@ -94,6 +98,44 @@ function App() {
   ];
 
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+  // @ts-ignore
+  const [sort, setSort] = useState<SpellSortTarget>("level");
+  // @ts-ignore
+  const [sortDir, setSortDir] = useState<SortDirection>("asc");
+
+  const spells = useMemo(() => {
+    return spellList.sort((a, b) => {
+      const dir = sortDir === "desc" ? 1 : -1;
+      const titleA = a.data.title.toUpperCase();
+      const titleB = b.data.title.toUpperCase();
+
+      switch (sort) {
+        case "title":
+          return titleA < titleB ? -dir : titleA > titleB ? dir : 0;
+
+        case "magicSchool":
+          // Sorts by school first, then alphabetically within that
+          const schoolA = a.data.details.magicSchool.toUpperCase();
+          const schoolB = b.data.details.magicSchool.toUpperCase();
+          if (schoolA < schoolB) return -dir;
+          if (schoolA > schoolB) return dir;
+          if (titleA < titleB) return -1;
+          if (titleA > titleB) return 1;
+          return 0;
+
+        case "level":
+          // Sorts by level first, then alphabetically within that
+          const levelSort = (b.data.details.level - a.data.details.level) * dir;
+          return levelSort === 0
+            ? titleA < titleB
+              ? -1
+              : titleA > titleB
+              ? 1
+              : 0
+            : levelSort;
+      }
+    });
+  }, [sort, sortDir, spellList]);
 
   function toggleOpenIndex(v: number) {
     setOpenIndex(openIndex === v ? null : v);
@@ -174,6 +216,43 @@ function App() {
     }
   }
 
+  const filterMenuButtons = useMemo<SlideMenuButton[]>(() => {
+    return [
+      {
+        text: "Category",
+        action: (v: SpellSortTarget) => setSort(v),
+        dropdownOptions: [
+          {
+            text: "School",
+            value: "school",
+          },
+          {
+            text: "Title",
+            value: "title",
+          },
+          {
+            text: "Level",
+            value: "level",
+          },
+        ],
+      },
+      {
+        text: "Direction",
+        action: (v: SortDirection) => setSortDir(v),
+        dropdownOptions: [
+          {
+            text: "Asc",
+            value: "asc",
+          },
+          {
+            text: "Desc",
+            value: "desc",
+          },
+        ],
+      },
+    ];
+  }, [sortDir, sort]);
+
   return (
     <>
       <CardCollectionContext.Provider value={cardCollectionData}>
@@ -196,6 +275,7 @@ function App() {
 
           {/* Spell Slots */}
           {/* <SpellSlotRow slots={pcData.spellSlots} /> */}
+          <SlideMenu buttons={filterMenuButtons} />
         </div>
       </CardCollectionContext.Provider>
     </>
