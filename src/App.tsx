@@ -9,28 +9,40 @@ import {
   SpellChillTouch,
   SpellDetectMagic,
   SpellDisguiseSelf,
+  SpellFalseLife,
   SpellFindFamiliar,
   SpellFireBolt,
+  SpellIdentify,
+  SpellInvisibility,
   SpellMageArmor,
   SpellMageHand,
   SpellMagicMissile,
+  SpellMindSliver,
   SpellMinorIllusion,
+  SpellMistyStep,
+  SpellPhantasmalForce,
   SpellShield,
   SpellSilentImage,
   SpellThaumaturgy,
 } from "./components/ability-card/spells";
 import { SlideMenu, SlideMenuButton } from "./components/slide-menu/SlideMenu";
+import { SpellPreparation } from "./components/spell-preparation/SpellPreparation";
+import { InventoryCurrency } from "./components/inventory/InventoryCurrency";
 
 // @ts-nocheck
 
+export interface TiltValues {
+  x: number;
+  y: number;
+}
+
 interface CardCollectionContextType {
-  tilt: {
-    x: number;
-    y: number;
-  };
+  tilt: TiltValues;
+  spells: SkillCard[];
 }
 export const CardCollectionContext = createContext<CardCollectionContextType>({
   tilt: { x: 0, y: 0 },
+  spells: [],
 });
 
 export type CastingComponents = "S" | "M" | "V" | "C";
@@ -95,6 +107,12 @@ function App() {
     SpellChillTouch,
     SpellThaumaturgy,
     SpellFindFamiliar,
+    SpellFalseLife,
+    SpellMistyStep,
+    SpellPhantasmalForce,
+    SpellInvisibility,
+    SpellMindSliver,
+    SpellIdentify,
   ];
 
   const [openIndex, setOpenIndex] = useState<number | null>(null);
@@ -102,40 +120,53 @@ function App() {
   const [sort, setSort] = useState<SpellSortTarget>("level");
   // @ts-ignore
   const [sortDir, setSortDir] = useState<SortDirection>("asc");
+  // @ts-ignore
+  const [filterPrepared, setFilterPrepared] = useState<boolean>(true);
 
   const spells = useMemo(() => {
-    return spellList.sort((a, b) => {
-      const dir = sortDir === "desc" ? 1 : -1;
-      const titleA = a.data.title.toUpperCase();
-      const titleB = b.data.title.toUpperCase();
+    return spellList
+      .sort((a, b) => {
+        const dir = sortDir === "desc" ? 1 : -1;
+        const titleA = a.data.title.toUpperCase();
+        const titleB = b.data.title.toUpperCase();
 
-      switch (sort) {
-        case "title":
-          return titleA < titleB ? -dir : titleA > titleB ? dir : 0;
+        switch (sort) {
+          case "title":
+            return titleA < titleB ? -dir : titleA > titleB ? dir : 0;
 
-        case "magicSchool":
-          // Sorts by school first, then alphabetically within that
-          const schoolA = a.data.details.magicSchool.toUpperCase();
-          const schoolB = b.data.details.magicSchool.toUpperCase();
-          if (schoolA < schoolB) return -dir;
-          if (schoolA > schoolB) return dir;
-          if (titleA < titleB) return -1;
-          if (titleA > titleB) return 1;
-          return 0;
+          case "magicSchool":
+            // Sorts by school first, then alphabetically within that
+            const schoolA = a.data.details.magicSchool.toUpperCase();
+            const schoolB = b.data.details.magicSchool.toUpperCase();
+            if (schoolA < schoolB) return -dir;
+            if (schoolA > schoolB) return dir;
+            if (titleA < titleB) return -1;
+            if (titleA > titleB) return 1;
+            return 0;
 
-        case "level":
-          // Sorts by level first, then alphabetically within that
-          const levelSort = (b.data.details.level - a.data.details.level) * dir;
-          return levelSort === 0
-            ? titleA < titleB
-              ? -1
-              : titleA > titleB
-              ? 1
-              : 0
-            : levelSort;
-      }
-    });
-  }, [sort, sortDir, spellList]);
+          case "level":
+            // Sorts by level first, then alphabetically within that
+            const levelSort =
+              (b.data.details.level - a.data.details.level) * dir;
+            return levelSort === 0
+              ? titleA < titleB
+                ? -1
+                : titleA > titleB
+                ? 1
+                : 0
+              : levelSort;
+        }
+      })
+      .filter((v) => {
+        if (filterPrepared) {
+          const preparedList =
+            localStorage.getItem("preparedSpells")?.split(",") ?? [];
+          return v.data.details.ritual || preparedList.includes(v.data.title);
+        } else {
+          return true;
+        }
+      });
+  }, [sort, sortDir, spellList, filterPrepared]);
 
   function toggleOpenIndex(v: number) {
     setOpenIndex(openIndex === v ? null : v);
@@ -148,8 +179,7 @@ function App() {
 
   const targetTilt = useRef({ x: 0, y: 0 });
   const animFrame = useRef<number | null>(null);
-  const [cardCollectionData, setCardCollectionData] =
-    useState<CardCollectionContextType>({ tilt: { x: 0, y: 0 } });
+  const [tiltData, setTiltData] = useState<TiltValues>({ x: 0, y: 0 });
 
   useEffect(() => {
     checkGyroSupport();
@@ -169,19 +199,24 @@ function App() {
   }
 
   function animateTilt() {
-    setCardCollectionData((prev) => {
-      const smoothX = lerp(prev.tilt.x, targetTilt.current.x, 0.1);
-      const smoothY = lerp(prev.tilt.y, targetTilt.current.y, 0.1);
+    setTiltData((prev) => {
+      const smoothX = lerp(prev.x, targetTilt.current.x, 0.1);
+      const smoothY = lerp(prev.y, targetTilt.current.y, 0.1);
 
       animFrame.current = requestAnimationFrame(animateTilt);
       return {
-        tilt: {
-          x: smoothX,
-          y: smoothY,
-        },
+        x: smoothX,
+        y: smoothY,
       };
     });
   }
+
+  const cardCollectionData: CardCollectionContextType = useMemo(() => {
+    return {
+      tilt: tiltData,
+      spells: spellList,
+    };
+  }, [tiltData, spells]);
 
   async function checkGyroSupport() {
     if (
@@ -221,10 +256,11 @@ function App() {
       {
         text: "Category",
         action: (v: SpellSortTarget) => setSort(v),
+        dropdownValue: sort,
         dropdownOptions: [
           {
             text: "School",
-            value: "school",
+            value: "magicSchool",
           },
           {
             text: "Title",
@@ -239,6 +275,7 @@ function App() {
       {
         text: "Direction",
         action: (v: SortDirection) => setSortDir(v),
+        dropdownValue: sortDir,
         dropdownOptions: [
           {
             text: "Asc",
@@ -253,6 +290,26 @@ function App() {
     ];
   }, [sortDir, sort]);
 
+  const preparedMenuButtons = useMemo<SlideMenuButton[]>(() => {
+    return [
+      {
+        text: "Prepared Spells Only",
+        action: (v: boolean) => setFilterPrepared(v),
+        dropdownValue: filterPrepared,
+        dropdownOptions: [
+          {
+            text: "Active",
+            value: true,
+          },
+          {
+            text: "Inactive",
+            value: false,
+          },
+        ],
+      },
+    ];
+  }, [filterPrepared]);
+
   return (
     <>
       <CardCollectionContext.Provider value={cardCollectionData}>
@@ -261,7 +318,7 @@ function App() {
           <div className="h-dvh overflow-auto no-scrollbar">
             <div className="flex flex-col h-max">
               {spells.map((skill, index) => (
-                <span id={`spell-${index}`}>
+                <span id={`spell-${index}`} key={`spell-card-${index}`}>
                   <AbilityCard
                     key={`ability-card-${index}`}
                     skill={skill}
@@ -275,7 +332,15 @@ function App() {
 
           {/* Spell Slots */}
           {/* <SpellSlotRow slots={pcData.spellSlots} /> */}
-          <SlideMenu buttons={filterMenuButtons} />
+          <div>
+            <div>
+              <SlideMenu buttons={filterMenuButtons} icon="BiSortAlt2" />
+              <SlideMenu buttons={preparedMenuButtons} icon="GiSpellBook" />
+            </div>
+            {!filterPrepared && <SpellPreparation />}
+
+            <InventoryCurrency />
+          </div>
         </div>
       </CardCollectionContext.Provider>
     </>

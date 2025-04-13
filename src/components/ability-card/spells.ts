@@ -22,7 +22,7 @@ export const SpellMinorIllusion = new SkillCard({
     components: ["S", "M"],
     materialComponents: "fleece",
   },
-  backgroundSrc: "https://i.imgur.com/RWyLnuD.png",
+  backgroundSrc: "https://i.imgur.com/nkh6fSk.png",
 
   content: [
     {
@@ -75,7 +75,7 @@ export const SpellFireBolt = new SkillCard({
       },
     ],
   },
-  backgroundSrc: "https://i.imgur.com/5FB6hwq.png",
+  backgroundSrc: "https://i.imgur.com/34CxwSo.png",
   content: [
     {
       text: "Hurl a mote of fire at a creature or an object within range.",
@@ -456,6 +456,170 @@ export const SpellFindFamiliar = new SkillCard({
     {
       header: "One Familiar Only",
       text: "Only one familiar is active at a time. Recasting will allow you to alter the Form it takes.",
+    },
+  ],
+});
+
+export const SpellFalseLife = new SkillCard({
+  title: "False Life",
+  backgroundSrc: "https://i.imgur.com/3uVGUmi.png",
+  details: {
+    castingTime: "Action",
+    range: "Self",
+    components: ["V", "S", "M"],
+    materialComponents: "a drop of alcohol",
+    magicSchool: "necromancy",
+    level: 1,
+  },
+  content: [
+    {
+      text: "Gain 2d4 + 4 Temporary Hit Points.",
+    },
+    {
+      header: "Spell slot scaling",
+      text: "Gain 5 additional Temporary Hit Points for each spell slot level above 1.",
+    },
+  ],
+});
+
+export const SpellMistyStep = new SkillCard({
+  title: "Misty Step",
+  backgroundSrc: "https://i.imgur.com/7w5Yi6d.png",
+  details: {
+    castingTime: "Bonus Action",
+    range: "Self",
+    components: ["V"],
+    magicSchool: "conjuration",
+    level: 2,
+  },
+  content: [
+    {
+      text: "Briefly surrounded by silvery mist, you teleport up to 30 feet to an unoccupied space you can see.",
+    },
+  ],
+});
+
+export const SpellPhantasmalForce = new SkillCard({
+  title: "Phantasmal Force",
+  backgroundSrc: "https://i.imgur.com/7o4PJDW.png",
+  details: {
+    castingTime: "Action",
+    range: "60ft",
+    components: ["V", "S", "M"],
+    magicSchool: "illusion",
+    concentration: true,
+    duration: "1min",
+    level: 2,
+    damage: {
+      dice: 8,
+      count: 2,
+      type: "Psychic",
+    },
+  },
+  content: [
+    {
+      text: "Attempt to craft an illusion in the mind of a creature you can see within range. The target makes INT saving throw. On a failed save, create a phantasmal object, creature, or phenomenon no larger than 10-foot Cube only perceptible to the mind of the target.",
+    },
+    {
+      header: "Stimuli",
+      text: "Illusion can include sound, vision, temperature, and any other stimuli, including pain.",
+    },
+    {
+      header: "Counter",
+      text: "Target can take a Study action INT (Investigation) check against spell save DC. If it succeeds, the illusion is broken.",
+    },
+    {
+      header: "Breaks in logic",
+      text: "While active, the target treats the phantasm as if it were real, and rationalizes any illogical outcomes that come from interacting with it. Example: target steps through phantasmal bridge and survives. They will attribute the fall to something else, but still believe the bridge is real.",
+    },
+    {
+      header: "Damage",
+      text: "If the illusion includes something dangerous or harmful, then on each of your turns the target takes 2d8 Psychic damage if they are within 5 feet of the phantasm. The target perceives the damage as the type appropriate to the illusion. (e.g. burning if there is a fire.)",
+    },
+  ],
+});
+
+export const SpellInvisibility = new SkillCard({
+  title: "Invisibility",
+  backgroundSrc: "https://i.imgur.com/HgdWRMO.png",
+  details: {
+    castingTime: "Action",
+    range: "Touch",
+    components: ["V", "S", "M"],
+    materialComponents: "an eyelash in gum arabic",
+    magicSchool: "illusion",
+    concentration: true,
+    duration: "1hr",
+    level: 2,
+  },
+  content: [
+    {
+      text: "A creature you touch has the Invisible condition until the spell ends. The spell ends early immediately after the target makes an attack roll, deals damage, or casts a spell.",
+    },
+    {
+      header: "Spell slot scaling",
+      text: "Target one additional creature for each spell slot level above 2.",
+    },
+  ],
+});
+
+export const SpellIdentify = new SkillCard({
+  title: "Identify",
+  details: {
+    castingTime: "1min",
+    ritual: true,
+    range: "Touch",
+    components: ["V", "S", "M"],
+    materialComponents: "a pearl worth 100+ GP",
+    magicSchool: "divination",
+    level: 1,
+  },
+  content: [
+    {
+      text: "You touch an object throughout the spell's casting. If the object is a magic item or some other magical object, you learn its properties and how to use them, whether it requires Attunement, and how many charges it has, if any. You learn whether any ongoing spells are affecting the item and what they are. If the item was created by a spell, you learn that spell's name.",
+    },
+    {
+      header: "Creature target",
+      text: "If a creature is touched, you learn which ongoing spells, if any, are currently affecting it.",
+    },
+  ],
+});
+
+export const SpellMindSliver = new SkillCard({
+  title: "Mind Sliver",
+  details: {
+    castingTime: "Action",
+    range: "60ft",
+    components: ["V"],
+    magicSchool: "enchantment",
+    level: 0,
+    damage: {
+      type: "Psychic",
+      count: 1,
+      dice: 6,
+    },
+    damageScaling: [
+      {
+        count: 2,
+        level: 5,
+      },
+      {
+        count: 3,
+        level: 11,
+      },
+      {
+        count: 4,
+        level: 17,
+      },
+    ],
+  },
+  content: [
+    {
+      text: "You try to temporarily sliver the mind of on creature you can see within range.",
+    },
+    {
+      header: "Counter",
+      text: "Creature must succeed on an INT saving throw. If they fail, they take damage and subtract 1d4 from the next saving throw they make before the end of your next turn.",
     },
   ],
 });
