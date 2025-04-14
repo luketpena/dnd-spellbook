@@ -28,6 +28,7 @@ import {
 import { SlideMenu, SlideMenuButton } from "./components/slide-menu/SlideMenu";
 import { SpellPreparation } from "./components/spell-preparation/SpellPreparation";
 import { InventoryCurrency } from "./components/inventory/InventoryCurrency";
+import { UserData, UserDataContext } from "./data-management/data-management";
 
 // @ts-nocheck
 
@@ -122,6 +123,8 @@ function App() {
   const [sortDir, setSortDir] = useState<SortDirection>("asc");
   // @ts-ignore
   const [filterPrepared, setFilterPrepared] = useState<boolean>(true);
+
+  const [coins, setCoins] = useState<number>(0);
 
   const spells = useMemo(() => {
     return spellList
@@ -311,7 +314,7 @@ function App() {
   }, [filterPrepared]);
 
   return (
-    <>
+    <UserDataContext.Provider value={{ coins, setCoins }}>
       <CardCollectionContext.Provider value={cardCollectionData}>
         <div className="grid grid-cols-[auto_1fr] bg-black h-dvh">
           {/* Spell List */}
@@ -343,7 +346,7 @@ function App() {
           </div>
         </div>
       </CardCollectionContext.Provider>
-    </>
+    </UserDataContext.Provider>
   );
 }
 
