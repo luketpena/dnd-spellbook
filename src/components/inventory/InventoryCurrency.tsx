@@ -54,7 +54,9 @@ export function getCoinColor(coin: Coin) {
 }
 
 export const InventoryCurrency: React.FC = () => {
+  //@ts-ignore
   const [coinCount, setCoinCount] = useState(2573);
+  const [showChangeModal, setShowChangeModal] = useState(false);
 
   const purse = useMemo<Partial<Purse>>(() => {
     return breakdownCoins(coinCount);
@@ -78,14 +80,23 @@ export const InventoryCurrency: React.FC = () => {
 
   return (
     <>
-      <div className="text-white flex gap-3">
+      <button
+        className="text-white flex gap-3"
+        onClick={() => setShowChangeModal(true)}
+      >
         {purseDisplay.map((entry) => (
           <p style={{ color: entry.color }} className="flex gap-1">
             <Icon name="GiCrownCoin" /> <span>{entry.value}</span>
           </p>
         ))}
-      </div>
-      {/* <Modal>Testing!</Modal> */}
+      </button>
+      <Modal
+        open={showChangeModal}
+        onClose={() => setShowChangeModal(false)}
+        title="Add/Remove Coin"
+      >
+        Testing!
+      </Modal>
     </>
   );
 };
