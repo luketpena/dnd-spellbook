@@ -31,12 +31,12 @@ export const SpellPreparation: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col gap-1 text-white/50 p-4">
+    <div className="flex flex-col flex-wrap h-[300px] text-white/50 p-4 overflow-hidden">
       {spells.map((spell, index) => (
         <button
           key={`spell-prep-${index}`}
           className={clsx(
-            "text-left",
+            "text-left px-2 py-1",
             preparedSpells.includes(spell.data.title) && "text-white"
           )}
           onClick={() => toggleSpell(spell)}

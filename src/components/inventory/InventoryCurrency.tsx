@@ -1,14 +1,8 @@
-import {
-  FormEventHandler,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
+import { UserDataContext } from "../../data-management/data-management";
 import Icon from "../shared/Icon";
 import { Modal } from "../shared/Modal";
-import { useForm, useWatch } from "react-hook-form";
-import { UserDataContext } from "../../data-management/data-management";
 
 export interface Purse {
   copper: number;
@@ -73,7 +67,7 @@ export function getCoinColor(coin: Coin) {
 
 export const InventoryCurrency: React.FC = () => {
   //@ts-ignore
-  const [showChangeModal, setShowChangeModal] = useState(true);
+  const [showChangeModal, setShowChangeModal] = useState(false);
   const [multiplier, setMultiplier] = useState(1);
 
   const { coins, setCoins } = useContext(UserDataContext);
@@ -145,9 +139,12 @@ export const InventoryCurrency: React.FC = () => {
     <>
       {/* Purse Button */}
       <button
-        className="text-white "
+        className="text-white h-16 w-16 flex flex-col items-center justify-center"
         onClick={() => setShowChangeModal(true)}
-      ></button>
+      >
+        <Icon name="GiSwapBag" size={24} />
+        <p className="text-sm font-semibold">{coins.toLocaleString()} </p>
+      </button>
 
       {/* Purse Modal */}
       <Modal

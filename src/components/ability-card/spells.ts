@@ -565,6 +565,7 @@ export const SpellInvisibility = new SkillCard({
 
 export const SpellIdentify = new SkillCard({
   title: "Identify",
+  backgroundSrc: "https://i.imgur.com/zTzWfPK.png",
   details: {
     castingTime: "1min",
     ritual: true,
@@ -587,6 +588,7 @@ export const SpellIdentify = new SkillCard({
 
 export const SpellMindSliver = new SkillCard({
   title: "Mind Sliver",
+  backgroundSrc: "https://i.imgur.com/Bb6IKcZ.png",
   details: {
     castingTime: "Action",
     range: "60ft",

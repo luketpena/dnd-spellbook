@@ -83,16 +83,17 @@ export const SlideMenu: React.FC<SlideMenuProps> = ({ buttons, icon }) => {
       <div
         ref={menuRef}
         className={clsx(
-          "text-white h-16 text-nowrap transition-all overflow-x-hidden overflow-y-visible flex"
+          "text-white h-16 text-nowrap transition-all overflow-x-hidden flex",
+          open ? "overflow-y-visible" : "overflow-y-hidden"
         )}
         style={{
           width: open ? `${maxContentWidth}px` : `64px`,
-          height: `${maxHeight * 64}px`,
+          height: open ? `${maxHeight * 64}px` : "64px",
         }}
       >
         {/* Toggle Button */}
         <button
-          className="min-h-16 min-w-16 h-16 flex items-center justify-center  transition-colors bg-gray-700 hover:bg-gray-600"
+          className="min-h-16 min-w-16 h-16 flex items-center justify-center transition-colors bg-gray-700 hover:bg-gray-600"
           onClick={(e) => clickToggle(e)}
         >
           <Icon name={icon} size={40} />

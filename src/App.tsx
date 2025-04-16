@@ -25,10 +25,12 @@ import {
   SpellSilentImage,
   SpellThaumaturgy,
 } from "./components/ability-card/spells";
+import { InventoryCurrency } from "./components/inventory/InventoryCurrency";
+import Icon from "./components/shared/Icon";
 import { SlideMenu, SlideMenuButton } from "./components/slide-menu/SlideMenu";
 import { SpellPreparation } from "./components/spell-preparation/SpellPreparation";
-import { InventoryCurrency } from "./components/inventory/InventoryCurrency";
-import { UserData, UserDataContext } from "./data-management/data-management";
+import { UserDataContext } from "./data-management/data-management";
+import { CharacterLevel } from "./components/character-stats/CharacterLevel";
 
 // @ts-nocheck
 
@@ -293,28 +295,28 @@ function App() {
     ];
   }, [sortDir, sort]);
 
-  const preparedMenuButtons = useMemo<SlideMenuButton[]>(() => {
-    return [
-      {
-        text: "Prepared Spells Only",
-        action: (v: boolean) => setFilterPrepared(v),
-        dropdownValue: filterPrepared,
-        dropdownOptions: [
-          {
-            text: "Active",
-            value: true,
-          },
-          {
-            text: "Inactive",
-            value: false,
-          },
-        ],
-      },
-    ];
-  }, [filterPrepared]);
+  // const preparedMenuButtons = useMemo<SlideMenuButton[]>(() => {
+  //   return [
+  //     {
+  //       text: "Prepared Spells Only",
+  //       action: (v: boolean) => setFilterPrepared(v),
+  //       dropdownValue: filterPrepared,
+  //       dropdownOptions: [
+  //         {
+  //           text: "Active",
+  //           value: true,
+  //         },
+  //         {
+  //           text: "Inactive",
+  //           value: false,
+  //         },
+  //       ],
+  //     },
+  //   ];
+  // }, [filterPrepared]);
 
   return (
-    <UserDataContext.Provider value={{ coins, setCoins }}>
+    <UserDataContext.Provider value={{ coins, setCoins, xp: 0 }}>
       <CardCollectionContext.Provider value={cardCollectionData}>
         <div className="grid grid-cols-[auto_1fr] bg-black h-dvh">
           {/* Spell List */}
@@ -335,14 +337,26 @@ function App() {
 
           {/* Spell Slots */}
           {/* <SpellSlotRow slots={pcData.spellSlots} /> */}
-          <div>
+          <div className="grid grid-rows-[auto_1fr]">
             <div>
               <SlideMenu buttons={filterMenuButtons} icon="BiSortAlt2" />
-              <SlideMenu buttons={preparedMenuButtons} icon="GiSpellBook" />
+              <button
+                className="w-16 h-16 flex items-center justify-center text-white"
+                onClick={() => setFilterPrepared(!filterPrepared)}
+              >
+                <Icon
+                  name={filterPrepared ? "GiSecretBook" : "GiSpellBook"}
+                  size={40}
+                />
+              </button>
+              {/* <SlideMenu
+                buttons={preparedMenuButtons}
+                icon={filterPrepared ? "GiSecretBook" : "GiSpellBook"}
+              /> */}
+              <InventoryCurrency />
             </div>
             {!filterPrepared && <SpellPreparation />}
-
-            <InventoryCurrency />
+            <CharacterLevel />
           </div>
         </div>
       </CardCollectionContext.Provider>
