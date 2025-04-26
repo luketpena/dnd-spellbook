@@ -8,6 +8,7 @@ export interface AccordionProps {
   openIndex?: number;
   index?: number;
   onOpenChange?: (i: number) => void;
+  scrollOnOpen?: boolean;
 }
 
 export const Accordion: React.FC<AccordionProps> = ({
@@ -16,9 +17,11 @@ export const Accordion: React.FC<AccordionProps> = ({
   index,
   openIndex,
   onOpenChange,
+  scrollOnOpen,
 }) => {
   const [open, setOpen] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const isOpen = useMemo(() => {
     if (index != undefined && openIndex != undefined) {
@@ -38,6 +41,22 @@ export const Accordion: React.FC<AccordionProps> = ({
     } else {
       setOpen(!open);
     }
+
+    if (scrollOnOpen) {
+      setTimeout(() => {
+        scrollIfOpen();
+      }, 200);
+    }
+  }
+
+  function scrollIfOpen() {
+    // This works because with timeout it triggers while in the flipped state
+    if (!isOpen) {
+      console.log("SCROLL!");
+      containerRef.current?.scrollIntoView({
+        behavior: "smooth",
+      });
+    }
   }
 
   return (
@@ -51,6 +70,7 @@ export const Accordion: React.FC<AccordionProps> = ({
           ? `${(contentRef.current?.offsetHeight ?? 0) + 48}px`
           : "48px",
       }}
+      ref={containerRef}
     >
       <button
         className="h-12 flex items-center justify-between  p-2 w-full "

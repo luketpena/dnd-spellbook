@@ -66,6 +66,7 @@ export const CharacterTraits: React.FC = () => {
                 index={index}
                 openIndex={openIndex}
                 onOpenChange={(v) => toggleIndex(v)}
+                scrollOnOpen
               >
                 <p>{trait.description}</p>
               </Accordion>
@@ -84,6 +85,7 @@ export const CharacterTraits: React.FC = () => {
                 index={index + racialTraits.length}
                 openIndex={openIndex}
                 onOpenChange={(v) => toggleIndex(v)}
+                scrollOnOpen
               >
                 <p>{trait.description}</p>
               </Accordion>
