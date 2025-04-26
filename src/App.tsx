@@ -31,6 +31,8 @@ import { SlideMenu, SlideMenuButton } from "./components/slide-menu/SlideMenu";
 import { SpellPreparation } from "./components/spell-preparation/SpellPreparation";
 import { UserDataContext } from "./data-management/data-management";
 import { CharacterLevel } from "./components/character-stats/CharacterLevel";
+import { Modal } from "./components/shared/Modal";
+import { CharacterTraits } from "./components/character-stats/CharacterTraits";
 
 // @ts-nocheck
 
@@ -125,6 +127,7 @@ function App() {
   const [sortDir, setSortDir] = useState<SortDirection>("asc");
   // @ts-ignore
   const [filterPrepared, setFilterPrepared] = useState<boolean>(true);
+  const [traitsOpen, setTraitsOpen] = useState<boolean>(false);
 
   const [coins, setCoins] = useState<number>(0);
 
@@ -349,6 +352,12 @@ function App() {
                   size={40}
                 />
               </button>
+              <button
+                className="w-16 h-16 flex items-center justify-center text-white"
+                onClick={() => setTraitsOpen(!traitsOpen)}
+              >
+                <Icon name="GiVitruvianMan" size={40} />
+              </button>
               {/* <SlideMenu
                 buttons={preparedMenuButtons}
                 icon={filterPrepared ? "GiSecretBook" : "GiSpellBook"}
@@ -359,6 +368,10 @@ function App() {
             <CharacterLevel />
           </div>
         </div>
+
+        <Modal open={traitsOpen} onClose={() => setTraitsOpen(false)}>
+          <CharacterTraits />
+        </Modal>
       </CardCollectionContext.Provider>
     </UserDataContext.Provider>
   );

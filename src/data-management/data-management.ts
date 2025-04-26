@@ -12,7 +12,6 @@ export const userDataStore = create<UserData>()(
       addXp: (add: number) => {
         set((state) => {
           const newXp = state.xp + add;
-          console.log(typeof state.xp, typeof add, typeof newXp);
           localStorage.setItem("xp", newXp.toString());
           return { ...state, xp: newXp };
         });
@@ -47,3 +46,9 @@ export const UserDataContext = createContext<UserDataLegacy>({
   coins: 0,
   setCoins: () => {},
 });
+
+export interface Trait {
+  title: string;
+  description: string;
+  source?: string;
+}

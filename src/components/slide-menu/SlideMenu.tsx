@@ -143,14 +143,6 @@ export const SlideMenu: React.FC<SlideMenuProps> = ({ buttons, icon }) => {
           </button>
         ))}
       </div>
-
-      {/* Dropdown menu */}
-      {/* {openDropdownIndex >= 0 && (
-        <div
-          className="absolute bg-red-500 h-16 w-16 top-16"
-          style={{ left: `${dropdownLeft}px`, width: `${dropdownWidth}px` }}
-        ></div>
-      )} */}
     </div>
   );
 };
