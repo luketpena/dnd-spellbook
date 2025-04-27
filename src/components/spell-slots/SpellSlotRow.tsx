@@ -5,6 +5,8 @@ import {
   userDataStore,
 } from "../../data-management/data-management";
 import clsx from "clsx";
+import Icon from "../shared/Icon";
+import { isEven } from "../../utility/math.util";
 // import { SpellSlot } from "../../class-data/class-data";
 
 interface SpellSlot {
@@ -52,32 +54,45 @@ interface SpellSlotRowProps {
   // slots: SpellSlot[];
 }
 
-const isEven = (v: number) => v % 2 === 0;
+export function getSpellSlots(xp: number, spellSlotUsage: number[]) {
+  const level = getLevelFromXp(xp);
+  return Object.entries(wizardSpellSlots)
+    .map(([key, tiers]) => {
+      const entry = tiers
+        .sort((a, b) => b.level - a.level)
+        .find((v) => v.level <= level);
+      const slotLevel = Number(key);
+      return {
+        level: slotLevel,
+        count: entry === undefined ? 0 : entry.count,
+        usage: spellSlotUsage[slotLevel - 1],
+      };
+    })
+    .filter((entry) => entry.count > 0);
+}
 
 export const SpellSlotRow: React.FC<SpellSlotRowProps> = () => {
-  const { xp, spellSlotUsage } = useStore(userDataStore);
+  const { xp, spellSlotUsage, incrementSpellSlotUsage } =
+    useStore(userDataStore);
 
   const spellSlots = useMemo(() => {
-    const level = getLevelFromXp(xp);
-    return Object.entries(wizardSpellSlots)
-      .map(([key, tiers]) => {
-        const entry = tiers
-          .sort((a, b) => b.level - a.level)
-          .find((v) => v.level <= level);
-        const slotLevel = Number(key);
-        return {
-          level: slotLevel,
-          count: entry === undefined ? 0 : entry.count,
-          usage: spellSlotUsage[slotLevel - 1],
-        };
-      })
-      .filter((entry) => entry.count > 0);
+    return getSpellSlots(xp, spellSlotUsage);
   }, [xp, spellSlotUsage]);
 
   return (
     <div className="text-white flex flex-col gap-2 w-max">
       {spellSlots.map((slot) => (
         <div key={`spell-slot-${slot.level}`} className="flex gap-2">
+          {/* + and - buttons */}
+          <div className="flex flex-col justify-around">
+            <button onClick={() => incrementSpellSlotUsage(slot.level, -1)}>
+              <Icon name="BiPlus" />
+            </button>
+            <button onClick={() => incrementSpellSlotUsage(slot.level, 1)}>
+              <Icon name="BiMinus" />
+            </button>
+          </div>
+
           {/* Spell slot usage pips */}
           <div className="relative  w-8">
             {Array.from({ length: slot.count }).map((v, index) => (
@@ -103,18 +118,6 @@ export const SpellSlotRow: React.FC<SpellSlotRowProps> = () => {
           </span>
         </div>
       ))}
-      {/* {slots.map((slot) => (
-        <span
-          key={`spell-slot-${slot.level}`}
-          className="text-white flex flex-col p-2 relative rounded-lg h-16 bg-black/75 bg-hexagon-flat items-center justify-center "
-        >
-          <span className=" text-white text-4xl leading-[30px]">
-            {slot.level}
-          </span>
-          <span className="text-xs leading-3">LEVEL</span>
-          <div className="absolute w-full h-full bg-white bg-hexagon-flat-outline"></div>
-        </span>
-      ))} */}
     </div>
   );
 };

@@ -1,6 +1,9 @@
 import { createContext } from "react";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { SkillCard } from "../components/ability-card/spells";
+import { clamp } from "../utility/math.util";
+import { getSpellSlots } from "../components/spell-slots/SpellSlotRow";
 
 export const levelExpThresholds = [
   355000, 305000, 265000, 225000, 195000, 165000, 140000, 120000, 100000, 85000,
@@ -16,12 +19,48 @@ export const userDataStore = create<UserData>()(
   persist(
     (set) => ({
       xp: 0,
-      spellSlotUsage: [1, 1],
+      spellSlotUsage: [1, 2],
+      incrementSpellSlotUsage: (slotLevel, change) => {
+        set((state) => {
+          const spellSlotUsage = [...state.spellSlotUsage];
+          const slots = getSpellSlots(state.xp, spellSlotUsage);
+          const slot = slots.find((v) => v.level === slotLevel);
+          if (slotLevel > 0 && slotLevel <= state.spellSlotUsage.length) {
+            spellSlotUsage[slotLevel - 1] = clamp(
+              spellSlotUsage[slotLevel - 1] + change,
+              0,
+              slot?.count ?? 0
+            );
+            console.log("increment", slotLevel, change, slot);
+          }
+
+          return { ...state, spellSlotUsage };
+        });
+      },
+      castSpell: (skill, slotLevel) => {
+        set((state) => {
+          const spellSlotUsage = [...state.spellSlotUsage];
+
+          // We only need to use up a slot for spells level 1 and higher
+          const level = slotLevel;
+          if (level > 0) {
+            if (spellSlotUsage.length >= level) {
+              spellSlotUsage[level - 1] += 1;
+            }
+          }
+
+          // Replace active spell concentration if relevant
+          const activeSpellConcentration = skill.data.details.concentration
+            ? skill.data.title
+            : state.activeSpellConcentration;
+          return { ...state, spellSlotUsage, activeSpellConcentration };
+        });
+      },
       activeSpellConcentration: null,
-      setXp: (xp: number) => {
+      setXp: (xp) => {
         set((state) => ({ ...state, xp }));
       },
-      addXp: (add: number) => {
+      addXp: (add) => {
         set((state) => {
           const newXp = state.xp + add;
           localStorage.setItem("xp", newXp.toString());
@@ -30,8 +69,8 @@ export const userDataStore = create<UserData>()(
       },
 
       coins: 0,
-      setCoins: (v: number) => {
-        set((state) => ({ ...state, coins: v }));
+      setCoins: (coins) => {
+        set((state) => ({ ...state, coins }));
       },
     }),
     {
@@ -43,6 +82,8 @@ export const userDataStore = create<UserData>()(
 export interface UserData {
   xp: number;
   spellSlotUsage: number[];
+  incrementSpellSlotUsage: (slotLevel: number, change: number) => void;
+  castSpell: (skill: SkillCard, slotLevel: number) => void;
   activeSpellConcentration: string | null;
   setXp: (v: number) => void;
   addXp: (v: number) => void;

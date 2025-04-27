@@ -343,7 +343,7 @@ function App() {
             <div className="grid grid-cols-[1fr_auto]">
               <div>{!filterPrepared && <SpellPreparation />}\</div>
 
-              <div>
+              <div className="flex flex-col gap-8 pr-4">
                 <CharacterLevel />
                 <SpellSlotRow />
               </div>
