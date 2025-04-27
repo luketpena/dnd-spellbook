@@ -1,5 +1,9 @@
 import { useStore } from "zustand";
-import { userDataStore } from "../../data-management/data-management";
+import {
+  getLevelFromXp,
+  levelExpThresholds,
+  userDataStore,
+} from "../../data-management/data-management";
 import { useMemo, useState } from "react";
 import { Modal } from "../shared/Modal";
 import { Button } from "../shared/Button";
@@ -8,11 +12,6 @@ import { FormProvider, useForm } from "react-hook-form";
 import { useLongPress } from "use-long-press";
 
 type XpFormMode = "add" | "set";
-
-const levelExpThresholds = [
-  355000, 305000, 265000, 225000, 195000, 165000, 140000, 120000, 100000, 85000,
-  64000, 48000, 34000, 23000, 14000, 6500, 2700, 900, 300, 0,
-] as const;
 
 export const CharacterLevel: React.FC = () => {
   const { xp, addXp, setXp } = useStore(userDataStore);
@@ -32,8 +31,7 @@ export const CharacterLevel: React.FC = () => {
   });
 
   const level = useMemo(() => {
-    const index = levelExpThresholds.findIndex((threshold) => threshold <= xp);
-    return index === -1 ? 1 : 20 - index;
+    return getLevelFromXp(xp);
   }, [xp]);
 
   const nextXpGoal = useMemo(() => {

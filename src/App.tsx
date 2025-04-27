@@ -33,6 +33,7 @@ import { UserDataContext } from "./data-management/data-management";
 import { CharacterLevel } from "./components/character-stats/CharacterLevel";
 import { Modal } from "./components/shared/Modal";
 import { CharacterTraits } from "./components/character-stats/CharacterTraits";
+import { SpellSlotRow } from "./components/spell-slots/SpellSlotRow";
 
 // @ts-nocheck
 
@@ -298,26 +299,6 @@ function App() {
     ];
   }, [sortDir, sort]);
 
-  // const preparedMenuButtons = useMemo<SlideMenuButton[]>(() => {
-  //   return [
-  //     {
-  //       text: "Prepared Spells Only",
-  //       action: (v: boolean) => setFilterPrepared(v),
-  //       dropdownValue: filterPrepared,
-  //       dropdownOptions: [
-  //         {
-  //           text: "Active",
-  //           value: true,
-  //         },
-  //         {
-  //           text: "Inactive",
-  //           value: false,
-  //         },
-  //       ],
-  //     },
-  //   ];
-  // }, [filterPrepared]);
-
   return (
     <UserDataContext.Provider value={{ coins, setCoins, xp: 0 }}>
       <CardCollectionContext.Provider value={cardCollectionData}>
@@ -338,9 +319,7 @@ function App() {
             </div>
           </div>
 
-          {/* Spell Slots */}
-          {/* <SpellSlotRow slots={pcData.spellSlots} /> */}
-          <div className="grid grid-rows-[auto_1fr]">
+          <div className="grid grid-cols-[auto_1fr]">
             <div>
               <SlideMenu buttons={filterMenuButtons} icon="BiSortAlt2" />
               <button
@@ -358,14 +337,17 @@ function App() {
               >
                 <Icon name="GiVitruvianMan" size={40} />
               </button>
-              {/* <SlideMenu
-                buttons={preparedMenuButtons}
-                icon={filterPrepared ? "GiSecretBook" : "GiSpellBook"}
-              /> */}
               <InventoryCurrency />
             </div>
-            {!filterPrepared && <SpellPreparation />}
-            <CharacterLevel />
+
+            <div className="grid grid-cols-[1fr_auto]">
+              <div>{!filterPrepared && <SpellPreparation />}\</div>
+
+              <div>
+                <CharacterLevel />
+                <SpellSlotRow />
+              </div>
+            </div>
           </div>
         </div>
 
