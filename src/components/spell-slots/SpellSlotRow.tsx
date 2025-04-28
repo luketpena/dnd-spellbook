@@ -98,7 +98,7 @@ export const SpellSlotRow: React.FC<SpellSlotRowProps> = () => {
             {Array.from({ length: slot.count }).map((v, index) => (
               <div
                 key={`level-${slot.level}-${index}`}
-                style={{ top: 9 * index, right: isEven(index) ? 12 : 0 }}
+                style={{ top: 9 * index, right: isEven(index) ? 13 : 0 }}
                 className={clsx(
                   "w-4 h-4 aspect-square bg-white absolute",
                   slot.usage > index

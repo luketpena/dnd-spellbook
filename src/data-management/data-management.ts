@@ -18,6 +18,13 @@ export function getLevelFromXp(xp: number) {
 export const userDataStore = create<UserData>()(
   persist(
     (set) => ({
+      maxHp: 17,
+      hp: 17,
+      tempHp: 0,
+      maxTempHp: 0,
+      ac: 0,
+      tempAc: 0,
+
       xp: 0,
       spellSlotUsage: [1, 2],
       incrementSpellSlotUsage: (slotLevel, change) => {
@@ -85,14 +92,27 @@ export const userDataStore = create<UserData>()(
 );
 
 export interface UserData {
+  // XP
   xp: number;
+  setXp: (v: number) => void;
+  addXp: (v: number) => void;
+
+  // HP and AC
+  hp: number;
+  maxHp: number;
+  tempHp: number;
+  maxTempHp: number;
+  ac: number;
+  tempAc: number;
+
+  // Spells
   spellSlotUsage: number[];
   incrementSpellSlotUsage: (slotLevel: number, change: number) => void;
   castSpell: (skill: SkillCard, slotLevel: number) => void;
   activeSpellConcentration: string | null;
   resetSpellConcentration: () => void;
-  setXp: (v: number) => void;
-  addXp: (v: number) => void;
+
+  // Purse + Inventory
   coins: number;
   setCoins: (v: number) => void;
 }
