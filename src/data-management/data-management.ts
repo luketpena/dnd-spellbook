@@ -57,6 +57,11 @@ export const userDataStore = create<UserData>()(
         });
       },
       activeSpellConcentration: null,
+      resetSpellConcentration: () => {
+        set((state) => {
+          return { ...state, activeSpellConcentration: null };
+        });
+      },
       setXp: (xp) => {
         set((state) => ({ ...state, xp }));
       },
@@ -85,6 +90,7 @@ export interface UserData {
   incrementSpellSlotUsage: (slotLevel: number, change: number) => void;
   castSpell: (skill: SkillCard, slotLevel: number) => void;
   activeSpellConcentration: string | null;
+  resetSpellConcentration: () => void;
   setXp: (v: number) => void;
   addXp: (v: number) => void;
   coins: number;

@@ -34,6 +34,7 @@ import { CharacterLevel } from "./components/character-stats/CharacterLevel";
 import { Modal } from "./components/shared/Modal";
 import { CharacterTraits } from "./components/character-stats/CharacterTraits";
 import { SpellSlotRow } from "./components/spell-slots/SpellSlotRow";
+import { SpellConcentration } from "./components/spell-concentration/SpellConcentration";
 
 // @ts-nocheck
 
@@ -98,29 +99,29 @@ const lerp = (start: number, end: number, amount: number) => {
   return start + (end - start) * amount;
 };
 
-function App() {
-  const spellList: SkillCard[] = [
-    SpellMinorIllusion,
-    SpellFireBolt,
-    SpellMageHand,
-    SpellMageArmor,
-    SpellSilentImage,
-    SpellShield,
-    SpellDetectMagic,
-    SpellDisguiseSelf,
-    SpellCharmPerson,
-    SpellMagicMissile,
-    SpellChillTouch,
-    SpellThaumaturgy,
-    SpellFindFamiliar,
-    SpellFalseLife,
-    SpellMistyStep,
-    SpellPhantasmalForce,
-    SpellInvisibility,
-    SpellMindSliver,
-    SpellIdentify,
-  ];
+export const spellList: SkillCard[] = [
+  SpellMinorIllusion,
+  SpellFireBolt,
+  SpellMageHand,
+  SpellMageArmor,
+  SpellSilentImage,
+  SpellShield,
+  SpellDetectMagic,
+  SpellDisguiseSelf,
+  SpellCharmPerson,
+  SpellMagicMissile,
+  SpellChillTouch,
+  SpellThaumaturgy,
+  SpellFindFamiliar,
+  SpellFalseLife,
+  SpellMistyStep,
+  SpellPhantasmalForce,
+  SpellInvisibility,
+  SpellMindSliver,
+  SpellIdentify,
+];
 
+function App() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   // @ts-ignore
   const [sort, setSort] = useState<SpellSortTarget>("level");
@@ -341,7 +342,10 @@ function App() {
             </div>
 
             <div className="grid grid-cols-[1fr_auto]">
-              <div>{!filterPrepared && <SpellPreparation />}\</div>
+              <div className="flex flex-col">
+                <SpellConcentration />
+                {!filterPrepared && <SpellPreparation />}
+              </div>
 
               <div className="flex flex-col gap-8 pr-4">
                 <CharacterLevel />

@@ -1,5 +1,12 @@
 import clsx from "clsx";
-import { useContext, useMemo, useState } from "react";
+import {
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { CardCollectionContext } from "../../App";
 import { getMagicSchoolIcon } from "../../class-data/magic";
 import Icon from "../shared/Icon";
@@ -17,18 +24,22 @@ export interface AbilityCardProps {
   open: boolean;
   onClickOpen: () => void;
   skill: SkillCard;
+  fixedHeight?: boolean;
 }
 
 export const AbilityCard: React.FC<AbilityCardProps> = ({
   open,
   onClickOpen,
   skill,
+  fixedHeight = true,
 }) => {
-  const { spellSlotUsage, castSpell, xp } = useStore(userDataStore);
+  const { spellSlotUsage, castSpell, xp, activeSpellConcentration } =
+    useStore(userDataStore);
   const { title, details, content, backgroundSrc } = skill.data;
-  const { magicSchool, level, prepared } = details;
+  const { magicSchool, level } = details;
   const cardContext = useContext(CardCollectionContext);
   const [spellCastingOpen, setSpellCastingOpen] = useState(false);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   const spellSlots = useMemo(() => {
     // Get all spell slots that are at or above the spell card level
@@ -36,11 +47,6 @@ export const AbilityCard: React.FC<AbilityCardProps> = ({
       (slot) => slot.level >= level
     );
   }, [xp, spellSlotUsage, level]);
-
-  function handleClick(e: React.MouseEvent, fn: () => void) {
-    e.stopPropagation();
-    fn();
-  }
 
   function handleCastSpell(skill: SkillCard, slotLevel: number) {
     castSpell(skill, slotLevel);
@@ -52,7 +58,7 @@ export const AbilityCard: React.FC<AbilityCardProps> = ({
       <div
         className={clsx(
           `group w-[400px] cursor-pointer relative  overflow-hidden bg-gray-900  p-2 bg-cover bg-center transition-[height]`,
-          open ? "h-[560px]" : "h-[130px]"
+          fixedHeight ? (open ? "h-[560px]" : "h-[130px]") : ""
         )}
         onClick={() => onClickOpen()}
         role="button"
@@ -69,7 +75,10 @@ export const AbilityCard: React.FC<AbilityCardProps> = ({
           }}
         ></div>
 
-        <div className="border border-white/75  border-x-white/50 border-b-white/25  transition-all h-full p-2 grid grid-rows-[auto_auto_1fr] gap-2 z-0 relative">
+        <div
+          ref={contentRef}
+          className=" border border-white/75  border-x-white/50 border-b-white/25  transition-all h-full p-2 grid grid-rows-[auto_auto_1fr] gap-2 z-0 relative"
+        >
           {/* Header */}
           <div className="flex gap-2 items-center justify-between  text-white">
             <div className="flex  grow">
@@ -99,7 +108,7 @@ export const AbilityCard: React.FC<AbilityCardProps> = ({
 
           <div
             className={clsx(
-              "transition-opacity gap-2 grid grid-rows-[auto_1fr_auto]",
+              "transition-opacity grid grid-rows-[auto_1fr] ",
               !open && "opacity-0"
             )}
           >
@@ -133,20 +142,15 @@ export const AbilityCard: React.FC<AbilityCardProps> = ({
             )}
 
             {/* Description */}
-            <div className="relative">
-              <div className="absolute w-full h-full left-0 top-0 no-scrollbar overflow-y-auto bg-black/75 rounded backdrop-blur-sm">
+            <div className="relative ">
+              <div
+                className={clsx(
+                  "w-full h-full no-scrollbar overflow-y-auto bg-black/75 rounded backdrop-blur-sm",
+                  fixedHeight && "absolute left-0 top-0 "
+                )}
+              >
                 <AbilityCardDescription content={content} />
               </div>
-            </div>
-
-            {/* Card Actions */}
-            <div className="bg-black/75 rounded p-2 text-white backdrop-blur-sm">
-              <button
-                className={clsx(prepared ? "text-white" : "text-white/50")}
-                onClick={(e) => handleClick(e, () => skill.togglePrepare())}
-              >
-                <Icon name="GiBrain" />
-              </button>
             </div>
           </div>
         </div>
@@ -170,10 +174,37 @@ export const AbilityCard: React.FC<AbilityCardProps> = ({
             )}
           </div>
         </div>
+
+        {details.concentration && (
+          <div
+            className={clsx(
+              "p-4 mb-4 border rounded font-semibold flex flex-col",
+              !activeSpellConcentration
+                ? "bg-black/25 dashed border-white text-white"
+                : activeSpellConcentration === title
+                ? "bg-orange-500/25 border-orange-500 text-orange-100"
+                : "bg-red-500/25 border-red-500 text-red-100"
+            )}
+          >
+            <span>
+              {!activeSpellConcentration
+                ? "This spell requires Concentration."
+                : activeSpellConcentration === title
+                ? "This spell is already being Concentrated on."
+                : "This spell will replace Concentration."}
+            </span>
+            {activeSpellConcentration && activeSpellConcentration != title && (
+              <span className="text-xs font-extralight">
+                Current spell: {activeSpellConcentration}
+              </span>
+            )}
+          </div>
+        )}
+
         {level === 0 ? (
           <p className="text-white italic">Does not require a spell slot</p>
         ) : (
-          <div className="flex gap-2 justify-between">
+          <div className="flex gap-2 justify-center">
             <button
               onClick={() => handleCastSpell(skill, 0)}
               className="text-white flex flex-col p-2 h-[64px] w-[74px]  aspect-square relative rounded-lg  bg-black/75 bg-hexagon-flat items-center justify-center"

@@ -1,11 +1,13 @@
 import { ReactNode } from "react";
 import Icon from "./Icon";
+import clsx from "clsx";
 
 export interface ModalProps {
   open: boolean;
   title?: string;
   onClose: () => void;
   children?: ReactNode;
+  noPadding?: boolean;
 }
 
 export const Modal: React.FC<ModalProps> = ({
@@ -13,6 +15,7 @@ export const Modal: React.FC<ModalProps> = ({
   open,
   onClose,
   title,
+  noPadding,
 }) => {
   if (!open) {
     return <></>;
@@ -31,7 +34,12 @@ export const Modal: React.FC<ModalProps> = ({
             </button>
           </div>
           {/* Content */}
-          <div className="p-6 overflow-x-hidden overflow-y-auto no-scrollbar">
+          <div
+            className={clsx(
+              "overflow-x-hidden overflow-y-auto no-scrollbar",
+              !noPadding && "p-6"
+            )}
+          >
             {children}
           </div>
         </div>
