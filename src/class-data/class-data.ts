@@ -1,3 +1,5 @@
+export type CharacterClass = "wizard" | "paladin";
+
 export interface SpellSlotData {
   spellLevel: number;
   tiers: {
@@ -10,14 +12,6 @@ export interface ClassData {
   spellSlots: SpellSlotData[];
 }
 
-export class CharacterClass {
-  spellSlots: SpellSlotData[] = [];
-
-  constructor(data: ClassData) {
-    this.spellSlots = data.spellSlots;
-  }
-}
-
 export class SpellSlot {
   level: number;
   count: number;
@@ -26,4 +20,3 @@ export class SpellSlot {
     this.count = _count;
   }
 }
-

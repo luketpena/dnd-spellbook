@@ -1,7 +1,8 @@
 import { useContext, useEffect, useState } from "react";
-import { CardCollectionContext } from "../../App";
+
 import clsx from "clsx";
 import { SkillCard } from "../ability-card/spells";
+import { CardCollectionContext } from "../../pages/HomePage";
 
 export const SpellPreparation: React.FC = () => {
   const { spells } = useContext(CardCollectionContext);

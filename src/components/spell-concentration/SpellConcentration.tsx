@@ -1,15 +1,16 @@
 import clsx from "clsx";
 import { useMemo, useState } from "react";
 import { useStore } from "zustand";
-import { spellList } from "../../App";
 import { userDataStore } from "../../data-management/data-management";
 import { AbilityCard } from "../ability-card/AbilityCard";
 import Icon from "../shared/Icon";
 import { Modal } from "../shared/Modal";
+import { charDataStore } from "../../data-management/char-data.management";
 
 export const SpellConcentration: React.FC = () => {
   const { activeSpellConcentration, resetSpellConcentration } =
     useStore(userDataStore);
+  const { spellList } = useStore(charDataStore);
   const activeSpell = useMemo(() => {
     if (!activeSpellConcentration) return undefined;
 

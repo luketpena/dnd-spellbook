@@ -1,4 +1,4 @@
-import { CardForm } from "../../App";
+import { CardForm } from "../../pages/HomePage";
 
 export class SkillCard {
   data: CardForm;
@@ -541,7 +541,7 @@ export const SpellPhantasmalForce = new SkillCard({
 
 export const SpellInvisibility = new SkillCard({
   title: "Invisibility",
-  backgroundSrc: "https://i.imgur.com/HgdWRMO.png",
+  backgroundSrc: "https://i.imgur.com/I5Fjsmo.png",
   details: {
     castingTime: "Action",
     range: "Touch",
@@ -622,6 +622,264 @@ export const SpellMindSliver = new SkillCard({
     {
       header: "Counter",
       text: "Creature must succeed on an INT saving throw. If they fail, they take damage and subtract 1d4 from the next saving throw they make before the end of your next turn.",
+    },
+  ],
+});
+
+export const SpellSpareTheDying = new SkillCard({
+  title: "Spare the Dying",
+  backgroundSrc: "https://i.imgur.com/KQ1JHZg.png",
+  details: {
+    castingTime: "Action",
+    range: "15ft",
+    components: ["V", "S"],
+    magicSchool: "necromancy",
+    level: 0,
+  },
+  content: [
+    {
+      text: "Choose a creature within range that has 0 Hit Points and isn't dead. The creature becomes Stable.",
+    },
+    {
+      header: "Cantrip Upgrade",
+      text: "The range doubles when you reach level 5 (30ft), 11 (60ft), and 17 (120ft).",
+    },
+  ],
+});
+
+export const SpellGuidance = new SkillCard({
+  title: "Guidance",
+  backgroundSrc: "https://i.imgur.com/V4kcyxE.png",
+  details: {
+    castingTime: "Action",
+    range: "Touch",
+    duration: "1min",
+    concentration: true,
+    components: ["V", "S"],
+    magicSchool: "divination",
+    level: 0,
+  },
+  content: [
+    {
+      text: "You touch a willing creature and choose a skill. Until the spell ends, the creature adds 1d4 to any ability check using the chosen skill.",
+    },
+  ],
+});
+
+export const SpellCureWounds = new SkillCard({
+  title: "Cure Wounds",
+  backgroundSrc: "https://i.imgur.com/4r8C3hZ.png",
+  details: {
+    castingTime: "Action",
+    range: "Touch",
+    components: ["V", "S"],
+    magicSchool: "abjuration",
+    level: 1,
+  },
+  content: [
+    {
+      text: "A creature you touch regains a number of Hit Points equal to 2d8 plus your spellcasting ability modifier.",
+    },
+    {
+      header: "Using a Higher-Level Spell Slot",
+      text: "The healing increases by 2d8 for each spell slot above level 1.",
+    },
+  ],
+});
+
+export const SpellShockingGrasp = new SkillCard({
+  title: "Shocking grasp",
+  backgroundSrc: "https://i.imgur.com/OUe1n0l.png",
+  details: {
+    castingTime: "Action",
+    range: "Touch",
+    components: ["V", "S"],
+    magicSchool: "evocation",
+    level: 0,
+    damage: {
+      type: "Lightning",
+      count: 1,
+      dice: 8,
+    },
+    damageScaling: [
+      {
+        count: 2,
+        level: 5,
+      },
+      {
+        count: 3,
+        level: 11,
+      },
+      {
+        count: 4,
+        level: 17,
+      },
+    ],
+  },
+  content: [
+    {
+      text: "Lightning springs from you to a creature that you try to touch. Make a melee spell attack against the target. On a hit, the target takes 1d8 Lightning damage, and it can't make Opportunity Attacks until the start of its next turn.",
+    },
+    {
+      header: "Cantrip Upgrade",
+      text: "The damage increases by 1d8 when you reach level 5 (2d8), 11 (3d8), and 17 (4d8)",
+    },
+  ],
+});
+
+export const SpellFeatherFall = new SkillCard({
+  title: "Feather Fall",
+  backgroundSrc: "https://i.imgur.com/dIzKvDV.png",
+  details: {
+    castingTime: "Reaction",
+    range: "60ft",
+    components: ["V", "M"],
+    materialComponents: "a small feather or piece of down",
+    magicSchool: "transmutation",
+    duration: "1min",
+    level: 1,
+  },
+  content: [
+    {
+      header: "Reaction",
+      text: "The Reaction casting time is trigger when you or a creature you can see within 60 feet of you falls.",
+    },
+    {
+      text: `Choose up to five falling creatures within range. A falling creature's rate of descent slows to 60 feet per round until the spell ends. If a creature lands before the spell ends, the creature takes no damage from the fall, and the spell ends for that creature.`,
+    },
+  ],
+});
+
+export const SpellDragonsBreath = new SkillCard({
+  title: "Dragon's Breath",
+  backgroundSrc: "https://i.imgur.com/Hx2EG4i.png",
+  details: {
+    castingTime: "Bonus Action",
+    range: "Touch",
+    components: ["V", "S", "M"],
+    materialComponents: "a hot pepper",
+    magicSchool: "transmutation",
+    concentration: true,
+    duration: "1min",
+    level: 2,
+  },
+  content: [
+    {
+      text: "You touch one willing creature and choose Acid, Cold, Fire, Lightning, or Poison. Until the spell ends, the target can take a Magic action to exhale a 15-foot Cone. Each creature in that area makes a Dexterity saving throw, taking 3d6 damage of the chosen type on a failed save or half as much damage on a successful one.",
+    },
+    {
+      header: "Using a Higher-Level Spell Slot",
+      text: "The damage increases by 1d6 for each spell slot level above 2.",
+    },
+  ],
+});
+
+export const SpellDivineSmite = new SkillCard({
+  title: "Divine Smite",
+  backgroundSrc: "https://i.imgur.com/CCGviOq.png",
+  details: {
+    castingTime: "Bonus Action",
+    magicSchool: "evocation",
+    components: ["V"],
+    range: "Self",
+    level: 1,
+    damage: {
+      type: "Radiant",
+      count: 2,
+      dice: 8,
+    },
+  },
+  content: [
+    {
+      header: "Bonus Action",
+      text: "Must be taken immediately after hitting a target with a Melee weapon or Unarmed Strike.",
+    },
+    {
+      text: "The target takes an extra 2d8 Radiant Damage from the attack. The damage increases by 1d8 if the target is a Fiend or an Undead.",
+    },
+    {
+      header: "Using a Higher-Level Spell Slot",
+      text: "The damage increases by 1d8 for each spell slot level above 1.",
+    },
+  ],
+});
+
+export const SpellProtectionFromEvilAndGood = new SkillCard({
+  title: "Protection From Evil And Good",
+  backgroundSrc: "https://i.imgur.com/JE3aYNE.png",
+  details: {
+    castingTime: "Action",
+    range: "Touch",
+    components: ["V", "S", "M"],
+    materialComponents:
+      "a flask of Holy Water worth 25+ GP, which the spell consumes",
+    duration: "10min",
+    concentration: true,
+    level: 1,
+    magicSchool: "abjuration",
+  },
+  content: [
+    {
+      text: "Until the spell ends, one willing creature you touch is protected against creatures that are Aberrations, Celestials, Elementals, Fey, Fiends, or Undead. The protection grants several benefits.",
+    },
+    {
+      text: "Creatures of those types have Disadvantage on attack rolls against the target.",
+    },
+    {
+      text: "The target also can't be possessed by or gain the Charmed or Frightened condition from them.",
+    },
+    {
+      text: "If the target is already possessed, Charmed, or Frightened by such a creature, the target has Advantage on any new saving throw against the relevant effect.",
+    },
+  ],
+});
+
+export const SpellThunderousSmite = new SkillCard({
+  title: "Thunderous Smite",
+  backgroundSrc: "https://i.imgur.com/BE1N6FA.png",
+  details: {
+    castingTime: "Bonus Action",
+    range: "Self",
+    components: ["V"],
+    magicSchool: "evocation",
+    level: 1,
+    damage: {
+      dice: 6,
+      count: 2,
+      type: "Thunder",
+    },
+  },
+  content: [
+    {
+      header: "Bonus Action",
+      text: "Must be taken immediately after hitting a target with a Melee weapon or Unarmed Strike.",
+    },
+    {
+      text: "Your strike rings with thunder that is audible withing 300 feet of you, and the target takes an extra 2d6 Thunder damage from the attack. Additionally, if the target is a creature, it must succeed on a Strength saving throw or be pushed 10 feet away from you and have the Prone condition.",
+    },
+    {
+      header: "Using a Higher-Level Spell Slot",
+      text: "The damage increased by 1d6 for each spell slot level above 1.",
+    },
+  ],
+});
+
+export const SpellShieldOfFaith = new SkillCard({
+  title: "Shield of Faith",
+  backgroundSrc: "https://i.imgur.com/WpbEZBv.png",
+  details: {
+    castingTime: "Bonus Action",
+    range: "60ft",
+    components: ["V", "S", "M"],
+    materialComponents: "a prayer scroll",
+    duration: "10min",
+    concentration: true,
+    magicSchool: "abjuration",
+    level: 1,
+  },
+  content: [
+    {
+      text: "A shimmering field surrounds a creature of your choice within range, granting it a +2 bonus to AC for the duration.",
     },
   ],
 });

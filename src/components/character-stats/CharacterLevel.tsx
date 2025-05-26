@@ -10,6 +10,7 @@ import { Button } from "../shared/Button";
 import { Input } from "../shared/form/Input";
 import { FormProvider, useForm } from "react-hook-form";
 import { useLongPress } from "use-long-press";
+import { ProgressRing } from "../shared/ProgressRing";
 
 type XpFormMode = "add" | "set";
 
@@ -82,40 +83,7 @@ export const CharacterLevel: React.FC = () => {
             <p className="text-4xl leading-12">{level}</p>
           </div>
           <div className="absolute top-0 left-0 scale-95 group-hover:scale-100 transition-transform">
-            <svg
-              width="150"
-              height="150"
-              viewBox="-25 -25 250 250"
-              version="1.1"
-              xmlns="http://www.w3.org/2000/svg"
-              style={{
-                transform: "rotate(-90deg)",
-              }}
-              className="transition-all opacity-50 group-hover:opacity-100 "
-            >
-              <circle
-                r="90"
-                cx="100"
-                cy="100"
-                fill="transparent"
-                stroke="#e0e0e055"
-                strokeWidth="16px"
-              ></circle>
-              <circle
-                r="90"
-                cx="100"
-                cy="100"
-                stroke="#00ffff"
-                strokeWidth="16px"
-                strokeLinecap="round"
-                strokeDasharray="565.48px"
-                fill="transparent"
-                strokeDashoffset={`${565.48 * (1 - progress)}px`}
-                style={{
-                  transition: "all 1s",
-                }}
-              ></circle>
-            </svg>
+            <ProgressRing progress={progress} color="#00ffff" />
           </div>
         </div>
 

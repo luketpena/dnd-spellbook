@@ -3,7 +3,9 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { SkillCard } from "../components/ability-card/spells";
 import { clamp } from "../utility/math.util";
-import { getSpellSlots } from "../components/spell-slots/SpellSlotRow";
+import { SpellSlot } from "../class-data/class-data";
+import { getSpellSlots } from "../components/spell-slots/spell-slot-row.util";
+import { charDataStore } from "./char-data.management";
 
 export const levelExpThresholds = [
   355000, 305000, 265000, 225000, 195000, 165000, 140000, 120000, 100000, 85000,
@@ -27,11 +29,24 @@ export const userDataStore = create<UserData>()(
 
       xp: 0,
       spellSlotUsage: [1, 2],
+
+      setAc: (value: number) => {
+        set((state) => {
+          return state;
+        });
+      },
+
       incrementSpellSlotUsage: (slotLevel, change) => {
         set((state) => {
+          // We need a class to perform this action - do nothing otherwise
+          const charClass = charDataStore.getState().charParams?.charClass;
+          if (!charClass) {
+            return { ...state };
+          }
+
           const spellSlotUsage = [...state.spellSlotUsage];
-          const slots = getSpellSlots(state.xp, spellSlotUsage);
-          const slot = slots.find((v) => v.level === slotLevel);
+          const slots = getSpellSlots(state.xp, spellSlotUsage, charClass);
+          const slot = slots.find((v: SpellSlot) => v.level === slotLevel);
           if (slotLevel > 0 && slotLevel <= state.spellSlotUsage.length) {
             spellSlotUsage[slotLevel - 1] = clamp(
               spellSlotUsage[slotLevel - 1] + change,
@@ -44,6 +59,7 @@ export const userDataStore = create<UserData>()(
           return { ...state, spellSlotUsage };
         });
       },
+
       castSpell: (skill, slotLevel) => {
         set((state) => {
           const spellSlotUsage = [...state.spellSlotUsage];

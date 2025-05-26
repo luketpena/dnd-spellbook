@@ -7,7 +7,6 @@ import {
   useRef,
   useState,
 } from "react";
-import { CardCollectionContext } from "../../App";
 import { getMagicSchoolIcon } from "../../class-data/magic";
 import Icon from "../shared/Icon";
 import "./AbilityCard.css";
@@ -18,7 +17,9 @@ import { SkillCard } from "./spells";
 import { Modal } from "../shared/Modal";
 import { useStore } from "zustand";
 import { userDataStore } from "../../data-management/data-management";
-import { getSpellSlots } from "../spell-slots/SpellSlotRow";
+import { getSpellSlots } from "../spell-slots/spell-slot-row.util";
+import { charDataStore } from "../../data-management/char-data.management";
+import { CardCollectionContext } from "../../pages/HomePage";
 
 export interface AbilityCardProps {
   open: boolean;
@@ -40,13 +41,14 @@ export const AbilityCard: React.FC<AbilityCardProps> = ({
   const cardContext = useContext(CardCollectionContext);
   const [spellCastingOpen, setSpellCastingOpen] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
+  const { charClass } = useStore(charDataStore);
 
   const spellSlots = useMemo(() => {
     // Get all spell slots that are at or above the spell card level
-    return getSpellSlots(xp, spellSlotUsage).filter(
+    return getSpellSlots(xp, spellSlotUsage, charClass).filter(
       (slot) => slot.level >= level
     );
-  }, [xp, spellSlotUsage, level]);
+  }, [xp, spellSlotUsage, level, charClass]);
 
   function handleCastSpell(skill: SkillCard, slotLevel: number) {
     castSpell(skill, slotLevel);
